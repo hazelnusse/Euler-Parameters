@@ -154,11 +154,10 @@ void reshape (int w, int h)
 void keyboard (unsigned char key, int x, int y)
 {
   if (key == 27) {
-    free(body);
+    freeRigidBody(body);
     exit(0);
   }
 }
-
 
 int main(int argc, char ** argv)
 {
@@ -167,15 +166,8 @@ int main(int argc, char ** argv)
 
   initRigidBody(body);  // set some default mass, inertia, forces, initial conditions
 
-  body->Ixx = 1.0;
-  body->Iyy = 2.0;
-  body->Izz = 3.0;
-
-  // Initial body fixed angular rates
-  body->x[4] = 0.1;
-  body->x[5] = 3.0;
-  body->x[6] = 0.1;
-  body->tf = 10.0;
+  processOptions(argc, argv, body);
+  
   evalOutputs(body);
 
   // Initialize animation window

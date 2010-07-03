@@ -14,8 +14,9 @@
  * =====================================================================================
  */
 
-#include "rigidbodyeoms.h"
 #include <math.h>
+#include <getopt.h>
+#include "rigidbodyeoms.h"
 
 int eoms(const double t, const double *VAR, double VARp[], void *params)
 {
@@ -250,3 +251,49 @@ void initRigidBody(RigidBody * body)
   body->m[3] = body->m[7] = body->m[11] = 0.0;
   body->m[15] = 1.0;
 } // initRigidBody()
+
+void freeRigidBody(RigidBody * body)
+{
+  gsl_odeiv_evolve_free(body->e);
+  gsl_odeiv_control_free(body->c);
+  gsl_odeiv_step_free(body->s);
+  free(body);
+} // freeRigidBody
+
+void processOptions(int argc, char ** argv, RigidBody * body)
+{
+  int c, opt_index;
+  struct option long_options[] = {
+     {"Ixx",  required_argument, 0, 'a'},
+     {"Iyy",  required_argument, 0, 'b'},
+     {"Izz",  required_argument, 0, 'c'},
+     {"Ixy",  required_argument, 0, 'd'},
+     {"Iyz",  required_argument, 0, 'e'},
+     {"Ixz",  required_argument, 0, 'f'},
+     {"w1",  required_argument, 0, 'g'},
+     {"w2",  required_argument, 0, 'h'},
+     {"w3",  required_argument, 0, 'i'},
+     {"tf",  required_argument, 0, 'j'},
+     {0, 0, 0, 0} };
+  while (1) {
+    opt_index = 0;
+    c = getopt_long(argc, argv, "a:b:c:d:e:f:g:h:i:j:", long_options, &opt_index);
+
+  if (c == -1)
+    break;
+
+  switch (c) {
+    case 'a': body->Ixx = atof(optarg); break;
+    case 'b': body->Iyy = atof(optarg); break;
+    case 'c': body->Izz = atof(optarg); break;
+    case 'd': body->Ixy = atof(optarg); break;
+    case 'e': body->Iyz = atof(optarg); break;
+    case 'f': body->Ixz = atof(optarg); break;
+    case 'g': body->x[4] = atof(optarg); break;
+    case 'h': body->x[5] = atof(optarg); break;
+    case 'i': body->x[6] = atof(optarg); break;
+    case 'j': body->tf = atof(optarg); break;
+    default: abort();
+    } // switch(c)
+  } // while
+} // processOptions()

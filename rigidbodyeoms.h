@@ -42,3 +42,5 @@ typedef struct {
 int eoms(const double t, const double *x, double f[], void *params);
 void evalOutputs(RigidBody * body);
 void initRigidBody(RigidBody * body);
+void freeRigidBody(RigidBody * body);
+void processOptions(int argc, char ** argv, RigidBody * body);
