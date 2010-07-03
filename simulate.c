@@ -114,13 +114,19 @@ void display(void)
 
 void updateState(int value)
 {
-  double tj;
+  double tj, mag;
 
   ++(body->k);
   tj = body->t + (1.0 / body->fps);
 
-  while (body->t < tj)
+  while (body->t < tj) {
     body->status = gsl_odeiv_evolve_apply(body->e, body->c, body->s, &(body->sys), &(body->t), tj, &(body->h), body->x);
+    mag = sqrt(body->x[0]*body->x[0] + body->x[1]*body->x[1] + body->x[2]*body->x[2] + body->x[3]*body->x[3]);
+    body->x[0] /= mag;
+    body->x[1] /= mag;
+    body->x[2] /= mag;
+    body->x[3] /= mag;
+  }
 
   // Evaluate output quantities
   evalOutputs(body);
@@ -161,10 +167,14 @@ int main(int argc, char ** argv)
 
   initRigidBody(body);  // set some default mass, inertia, forces, initial conditions
 
+  body->Ixx = 1.0;
+  body->Iyy = 2.0;
+  body->Izz = 3.0;
+
   // Initial body fixed angular rates
-  body->x[4] = 3.0;
-  body->x[5] = 1.0;
-  body->x[6] = -2.0;
+  body->x[4] = 0.1;
+  body->x[5] = 3.0;
+  body->x[6] = 0.1;
   body->tf = 10.0;
   evalOutputs(body);
 
