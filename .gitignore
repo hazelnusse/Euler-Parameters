@@ -1,3 +1,5 @@
 *.o
 *.dir
 *.in
+simulate
+rigidbody.c
