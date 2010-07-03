@@ -131,7 +131,7 @@ void updateState(int value)
   // Evaluate output quantities
   evalOutputs(body);
   // Print the magnitude of the quaternion
-  printf("sqrt(e0^2 + e1^2 + e2^2 + e3^2) = %0.16f\n", sqrt(pow(body->x[0], 2.0) + pow(body->x[1], 2.0) + pow(body->x[2], 2.0) + pow(body->x[3], 2.0)));
+  // printf("sqrt(e0^2 + e1^2 + e2^2 + e3^2) = %0.16f\n", sqrt(pow(body->x[0], 2.0) + pow(body->x[1], 2.0) + pow(body->x[2], 2.0) + pow(body->x[3], 2.0)));
 
   glutPostRedisplay();
   
