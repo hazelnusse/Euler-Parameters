@@ -264,25 +264,45 @@ void processOptions(int argc, char ** argv, RigidBody * body)
 {
   int c, opt_index;
   struct option long_options[] = {
+     {"help", no_argument, 0, '?'},
      {"Ixx",  required_argument, 0, 'a'},
      {"Iyy",  required_argument, 0, 'b'},
      {"Izz",  required_argument, 0, 'c'},
      {"Ixy",  required_argument, 0, 'd'},
      {"Iyz",  required_argument, 0, 'e'},
      {"Ixz",  required_argument, 0, 'f'},
-     {"w1",  required_argument, 0, 'g'},
-     {"w2",  required_argument, 0, 'h'},
-     {"w3",  required_argument, 0, 'i'},
-     {"tf",  required_argument, 0, 'j'},
+     {"wx",  required_argument, 0, 'g'},
+     {"wy",  required_argument, 0, 'h'},
+     {"wz",  required_argument, 0, 'i'},
+     {"tf",  required_argument, 0, 't'},
      {0, 0, 0, 0} };
   while (1) {
     opt_index = 0;
-    c = getopt_long(argc, argv, "a:b:c:d:e:f:g:h:i:j:", long_options, &opt_index);
+    c = getopt_long(argc, argv, "?a:b:c:d:e:f:g:h:i:t:", long_options, &opt_index);
 
   if (c == -1)
     break;
 
   switch (c) {
+    case '?':
+      printf("usage: %s [OPTION]\n\n"
+             "Mandatory arguments to long options are mandatory for short options too.\n\n"
+             "  -?, --help                         display this help and exit.\n"
+             "  -a val, --Ixx=val                      Specify Ixx moment of inertia.\n"
+             "  -b val, --Iyy=val                      Specify Iyy moment of inertia.\n"
+             "  -c val, --Izz=val                      Specify Izz moment of inertia.\n"
+             "  -d val, --Ixy=val                      Specify Ixy moment of inertia.\n"
+             "  -e val, --Iyz=val                      Specify Iyz moment of inertia.\n"
+             "  -f val, --Ixz=val                      Specify Ixz moment of inertia.\n"
+             "  -g val, --wx=val                       Specify initial angular velocity about body-fixed x axis\n"
+             "  -h val, --wy=val                       Specify initial angular velocity about body-fixed y axis\n"
+             "  -i val, --wz=val                       Specify initial angular velocity about body-fixed z axis\n"
+             "  -t val, --tf=val                       Specify total simulation time\n\n"
+             "Example of how to specify Ixx=1.0, Iyy=2.0, Izz=3.0, intial angular velocity of w=[0.1, 2.0, 0.1]:\n\n"
+             "$ %s -a 1.0 --Iyy=2.0 --Izz=3.0 -g 0.1 --wy=2.0 --wz=0.1\n\n", 
+             argv[0], argv[0]);
+      exit(0);
+ 
     case 'a': body->Ixx = atof(optarg); break;
     case 'b': body->Iyy = atof(optarg); break;
     case 'c': body->Izz = atof(optarg); break;
@@ -292,7 +312,7 @@ void processOptions(int argc, char ** argv, RigidBody * body)
     case 'g': body->x[4] = atof(optarg); break;
     case 'h': body->x[5] = atof(optarg); break;
     case 'i': body->x[6] = atof(optarg); break;
-    case 'j': body->tf = atof(optarg); break;
+    case 't': body->tf = atof(optarg); break;
     default: abort();
     } // switch(c)
   } // while
