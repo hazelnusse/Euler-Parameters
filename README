@@ -1,0 +1,7 @@
+Example of how Euler parameters are used for parameterizing orientation, along
+with outputting during numerical integration the 4x4 transformation ModelView
+matrix that can be used directly by OpenGL.
+
+Note that no issues arise when passing through the configurations that would
+typically create numerical instabilities when parameterizing orientations using
+Euler angles.
