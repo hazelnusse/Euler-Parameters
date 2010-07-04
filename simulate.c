@@ -12,11 +12,18 @@
  * =====================================================================================
  */
 
+#ifdef __APPLE__                                                                                                                                                                                                
+#include <OpenGL/OpenGL.h>                                                                                                                                                                                      
+#include <GLUT/glut.h>                                                                                                                                                                                          
+#else                                                                                                                                                                                                           
+#include <GL/glut.h>                                                                                                                                                                                            
+#endif    
 
 #include <stdio.h>
 #include <math.h>
-#include <GL/glut.h>
+
 #include <gsl/gsl_errno.h>
+
 #include "rigidbodyeoms.h"
 #define WIDTH 1280
 #define HEIGHT 720
