@@ -30,6 +30,9 @@ typedef struct {
   // integration
   double t, tf, h, fps;
   int k, status;
+  
+  // For storing filename roots passed through command line
+  char *pngs;
 
   // Boiler plate code to use GSL ODE integrator
   const gsl_odeiv_step_type * T;

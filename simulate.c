@@ -12,11 +12,11 @@
  * =====================================================================================
  */
 
-#ifdef __APPLE__                                                                                                                                                                                                
-#include <OpenGL/OpenGL.h>                                                                                                                                                                                      
-#include <GLUT/glut.h>                                                                                                                                                                                          
-#else                                                                                                                                                                                                           
-#include <GL/glut.h>                                                                                                                                                                                            
+#ifdef __APPLE__
+#include <OpenGL/OpenGL.h>
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
 #endif    
 
 #include <stdio.h>
@@ -25,12 +25,14 @@
 #include <gsl/gsl_errno.h>
 
 #include "rigidbodyeoms.h"
-#define WIDTH 720
+#include "savepng.h"
+
+#define WIDTH 1280
 #define HEIGHT 720
 
 // Declare a global pointer to a RigidBody structure
 RigidBody * body;
-char wx[15], wy[15], wz[15], t[15];
+char wx[15], wy[15], wz[15], t[15], Ixx[15], Iyy[15], Izz[15], Ixy[15], Iyz[15], Ixz[15];
 
 void render_string( char* string, float x, float y )
 {
@@ -40,7 +42,7 @@ void render_string( char* string, float x, float y )
   
   //Print string; Each character rendered before raster position iterated by amount required for correct font spacing
   for (i = 0; i < 13; ++i)
-    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, *(string+i));
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *(string+i));
 }
 
 void init(void)
@@ -57,15 +59,22 @@ void init(void)
 
 void display(void)
 {
-  glClear(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   // glMatrixMode(GL_MODELVIEW);
   
   glLoadIdentity();
+  glColor3f(0.0, 0.0, 0.0);
   glTranslatef(0.0, 0.0, -3.0);
-  render_string( t, -1.0, 1.0);
-  render_string(wx, -1.0, 0.9);
-  render_string(wy, -1.0, 0.8);
-  render_string(wz, -1.0, 0.7);
+  render_string( t, -1.1, -0.98);
+  render_string(wx, -1.1, -1.04);
+  render_string(wy, -1.1, -1.1);
+  render_string(wz, -1.1, -1.16);
+  render_string(Ixx, -0.4, -1.1);
+  render_string(Iyy, -0.0, -1.1);
+  render_string(Izz,  0.4, -1.1);
+  render_string(Ixy, -0.4, -1.16);
+  render_string(Iyz,  0.0, -1.16);
+  render_string(Ixz,  0.4, -1.16);
 
   //Add ambient light
   GLfloat ambientColor[] = {0.4f, 0.4f, 0.4f, 1.0f}; //Color (0.2, 0.2, 0.2)
@@ -132,6 +141,10 @@ void display(void)
     glutSolidCone(0.05, 0.1, 10, 1);
   glPopMatrix();
 
+  glFinish();
+  if (body->pngs)
+    SavePNG(WIDTH, HEIGHT, body->pngs, body->k);
+
   glutSwapBuffers();  // Only needed if in double buffer mode
 }
 
@@ -151,9 +164,9 @@ void updateState(int value)
     body->x[3] /= mag;
   }
   sprintf( t, " t = %6.1f", body->t);
-  sprintf(wx, "wx = %6.5f", body->x[4]);
-  sprintf(wy, "wy = %6.5f", body->x[5]);
-  sprintf(wz, "wz = %6.5f", body->x[6]);
+  sprintf(wx, "wx = %+6.2f", body->x[4]);
+  sprintf(wy, "wy = %+6.2f", body->x[5]);
+  sprintf(wz, "wz = %+6.2f", body->x[6]);
 
   // Evaluate output quantities
   evalOutputs(body);
@@ -194,6 +207,13 @@ int main(int argc, char ** argv)
   initRigidBody(body);  // set some default mass, inertia, forces, initial conditions
 
   processOptions(argc, argv, body);
+
+  sprintf(Ixx, "Ixx = %6.3f", body->Ixx);
+  sprintf(Iyy, "Iyy = %6.3f", body->Iyy);
+  sprintf(Izz, "Izz = %6.3f", body->Izz);
+  sprintf(Ixy, "Ixy = %6.3f", body->Ixy);
+  sprintf(Iyz, "Iyz = %6.3f", body->Iyz);
+  sprintf(Ixz, "Ixz = %6.3f", body->Ixz);
   
   evalOutputs(body);
 

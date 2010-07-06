@@ -16,6 +16,8 @@
 
 #include <math.h>
 #include <getopt.h>
+#include <string.h>
+
 #include "rigidbodyeoms.h"
 
 int eoms(const double t, const double *VAR, double VARp[], void *params)
@@ -236,6 +238,7 @@ void initRigidBody(RigidBody * body)
 
   // Initialize frame step counter 0
   body->k = 0;
+  body->pngs = NULL;  // by default, don't save pngs
 
   // Boiler plate code to use GSL ODE integrator
   body->T = gsl_odeiv_step_rk8pd;
@@ -265,6 +268,7 @@ void processOptions(int argc, char ** argv, RigidBody * body)
   int c, opt_index;
   struct option long_options[] = {
      {"help", no_argument, 0, '?'},
+     {"pngs", required_argument, 0, 'p'},
      {"Ixx",  required_argument, 0, 'a'},
      {"Iyy",  required_argument, 0, 'b'},
      {"Izz",  required_argument, 0, 'c'},
@@ -278,7 +282,7 @@ void processOptions(int argc, char ** argv, RigidBody * body)
      {0, 0, 0, 0} };
   while (1) {
     opt_index = 0;
-    c = getopt_long(argc, argv, "?a:b:c:d:e:f:g:h:i:t:", long_options, &opt_index);
+    c = getopt_long(argc, argv, "?a:b:c:d:e:f:g:h:i:t:p:", long_options, &opt_index);
 
   if (c == -1)
     break;
@@ -313,6 +317,10 @@ void processOptions(int argc, char ** argv, RigidBody * body)
     case 'h': body->x[5] = atof(optarg); break;
     case 'i': body->x[6] = atof(optarg); break;
     case 't': body->tf = atof(optarg); break;
+    case 'p': 
+      body->pngs = (char *) malloc(strlen(optarg) + 9);
+      strcpy(body->pngs, optarg);
+      break;
     default: abort();
     } // switch(c)
   } // while
