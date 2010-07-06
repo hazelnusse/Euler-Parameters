@@ -25,11 +25,23 @@
 #include <gsl/gsl_errno.h>
 
 #include "rigidbodyeoms.h"
-#define WIDTH 1280
+#define WIDTH 720
 #define HEIGHT 720
 
 // Declare a global pointer to a RigidBody structure
 RigidBody * body;
+char wx[15], wy[15], wz[15], t[15];
+
+void render_string( char* string, float x, float y )
+{
+  int i;
+  //Set initial string raster position.  Assumes x-y plane is the plane of the monitor with origin in upper-left corner (I think)
+  glRasterPos3f(x, y, 0.0);
+  
+  //Print string; Each character rendered before raster position iterated by amount required for correct font spacing
+  for (i = 0; i < 13; ++i)
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, *(string+i));
+}
 
 void init(void)
 {
@@ -50,6 +62,10 @@ void display(void)
   
   glLoadIdentity();
   glTranslatef(0.0, 0.0, -3.0);
+  render_string( t, -1.0, 1.0);
+  render_string(wx, -1.0, 0.9);
+  render_string(wy, -1.0, 0.8);
+  render_string(wz, -1.0, 0.7);
 
   //Add ambient light
   GLfloat ambientColor[] = {0.4f, 0.4f, 0.4f, 1.0f}; //Color (0.2, 0.2, 0.2)
@@ -134,6 +150,10 @@ void updateState(int value)
     body->x[2] /= mag;
     body->x[3] /= mag;
   }
+  sprintf( t, " t = %6.1f", body->t);
+  sprintf(wx, "wx = %6.5f", body->x[4]);
+  sprintf(wy, "wy = %6.5f", body->x[5]);
+  sprintf(wz, "wz = %6.5f", body->x[6]);
 
   // Evaluate output quantities
   evalOutputs(body);
