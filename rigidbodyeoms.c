@@ -289,22 +289,28 @@ void processOptions(int argc, char ** argv, RigidBody * body)
 
   switch (c) {
     case '?':
-      printf("usage: %s [OPTION]\n\n"
-             "Mandatory arguments to long options are mandatory for short options too.\n\n"
-             "  -?, --help                         display this help and exit.\n"
-             "  -a val, --Ixx=val                      Specify Ixx moment of inertia.\n"
-             "  -b val, --Iyy=val                      Specify Iyy moment of inertia.\n"
-             "  -c val, --Izz=val                      Specify Izz moment of inertia.\n"
-             "  -d val, --Ixy=val                      Specify Ixy moment of inertia.\n"
-             "  -e val, --Iyz=val                      Specify Iyz moment of inertia.\n"
-             "  -f val, --Ixz=val                      Specify Ixz moment of inertia.\n"
-             "  -g val, --wx=val                       Specify initial angular velocity about body-fixed x axis\n"
-             "  -h val, --wy=val                       Specify initial angular velocity about body-fixed y axis\n"
-             "  -i val, --wz=val                       Specify initial angular velocity about body-fixed z axis\n"
-             "  -t val, --tf=val                       Specify total simulation time\n\n"
-             "Example of how to specify Ixx=1.0, Iyy=2.0, Izz=3.0, intial angular velocity of w=[0.1, 2.0, 0.1]:\n\n"
-             "$ %s -a 1.0 --Iyy=2.0 --Izz=3.0 -g 0.1 --wy=2.0 --wz=0.1\n\n", 
-             argv[0], argv[0]);
+      printf(
+"usage: %s [OPTION]\n\n"
+"  -?, --help                   Display this help and exit.\n"
+"  --Ixx=val                    Ixx moment of inertia.\n"
+"  --Iyy=val                    Iyy moment of inertia.\n"
+"  --Izz=val                    Izz moment of inertia.\n"
+"  --Ixy=val                    Ixy product of inertia.\n"
+"  --Iyz=val                    yz product of inertia.\n"
+"  --Ixz=val                    Ixz product of inertia.\n"
+"  --wx=val                     Initial angular velocity about body-fixed x axis\n"
+"  --wy=val                     Initial angular velocity about body-fixed y axis\n"
+"  --wz=val                     Initial angular velocity about body-fixed z axis\n"
+"  -t val, --tf=val             Total simulation time\n"
+"  --pngs=file                  Capture frames to file in png format\n\n"
+"Example of how to specify Ixx=1.0, Iyy=2.0, Izz=3.0, intial angular velocity\nof\nw=[0.1, 2.0, 0.1]:\n\n"
+"$ %s --Ixx=1.0 --Iyy=2.0 --Izz=3.0 --wx=0.1 --wy=2.0 --wz=0.1\n\n"
+"Example of how to do the same simulation but also save each animation frame\n"
+"to file:\n\n"
+"$ %s --Ixx=1.0 --Iyy=2.0 --Izz=3.0 --wx=0.1 --wy=2.0 --wz=0.1 \\\n"
+"  --pngs=./body\n\n" 
+"This will create in the current working directory the files \"body0000.png\",\n\"body0001.png\", and so on for each frame of the animation.\n\n",
+             argv[0], argv[0], argv[0]);
       exit(0);
  
     case 'a': body->Ixx = atof(optarg); break;
