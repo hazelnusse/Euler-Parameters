@@ -5,3 +5,10 @@ matrix that can be used directly by OpenGL.
 Note that no issues arise when passing through the configurations that would
 typically create numerical instabilities when parameterizing orientations using
 Euler angles.
+
+On Ubuntu, aptitude install these packages to enable compilation:
+
+freeglut3-dev
+libgsl0-dev
+libpng12-dev
+libatlas-base-dev
